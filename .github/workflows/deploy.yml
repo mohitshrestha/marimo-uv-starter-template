@@ -56,6 +56,12 @@ jobs:
           enable-cache: true
         # Caches UV for faster future runs and repeatable environment setup
 
+      # Check if `uv` is installed and its version
+      - name: Check UV installation
+        run: |
+          uv --version     # Verify that UV is installed
+          which uv         # Verify that UV is in the PATH
+          
       # ------------------------------------------------------
       # 3. Set up Python environment via UV
       # ------------------------------------------------------
