@@ -13,12 +13,13 @@ __generated_with = "0.13.5"
 app = marimo.App(width="medium")
 
 with app.setup:
-    import marimo as mo
-    import polars as pl
     import altair as alt
+    import marimo as mo
     import pandas as pd
+    import polars as pl
 
     file = mo.notebook_location() / "public" / "penguins.csv"
+
 
 @app.cell(hide_code=True)
 def _():
@@ -29,21 +30,21 @@ def _():
         Analyzing the Palmer Penguins dataset using Polars and marimo.
         """
     )
-    return
 
 
 @app.cell
 def _():
     # Read the penguins dataset
     df = pl.read_csv(str(file))
-    df.head()
-    return (df,)
+    return df  # df.head() removed, returning full df
+
 
 @app.cell
 def _():
     # Try to avoid reading the file with pandas
     _df = pd.read_csv(str(file))
-    return
+    return _df  # Optional, if you want to return pandas df
+
 
 @app.cell
 def _(df):
@@ -52,19 +53,17 @@ def _(df):
     ### Dataset Overview
 
     - Total records: {df.height}
-    - Columns: {', '.join(df.columns)}
+    - Columns: {", ".join(df.columns)}
 
     ### Summary Statistics
 
     {mo.as_html(df.describe())}
     """)
-    return
 
 
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""### Species Distribution""")
-    return
 
 
 @app.cell
@@ -77,15 +76,12 @@ def _(df):
         .properties(title="Distribution of Penguin Species"),
         chart_selection=None,
     )
-
-    species_chart
-    return (species_chart,)
+    return species_chart  # removed standalone expression
 
 
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""### Bill Dimensions Analysis""")
-    return
 
 
 @app.cell
@@ -103,9 +99,7 @@ def _(df):
         .properties(title="Bill Length vs Depth by Species"),
         chart_selection=None,
     )
-
-    scatter
-    return (scatter,)
+    return scatter  # removed standalone expression
 
 
 if __name__ == "__main__":

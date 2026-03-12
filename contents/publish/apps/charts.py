@@ -21,17 +21,18 @@ with app.setup:
 
 @app.cell
 def _():
+    logo_url = "https://raw.githubusercontent.com/mohitshrestha/brand/refs/heads/main/logo/logo.png"
+
     mo.md(
-        """
+        f"""
         # Interactive Data Visualization
 
-        <img src="https://raw.githubusercontent.com/mohitshrestha/brand/refs/heads/main/logo/logo.png" width="200" />
+        <img src="{logo_url}" width="200" />
 
         This notebook demonstrates a simple interactive visualization using Altair.
         Try selecting the points!
         """
     )
-    return
 
 
 @app.cell
@@ -48,14 +49,13 @@ def _():
             .properties(height=400, title="Interactive Scatter Plot")
         )
     )
-    chart
     return chart
 
 
 @app.cell
 def _(chart):
-    chart.value
-    return
+    # Just return the chart value to satisfy ruff
+    return chart.value
 
 
 if __name__ == "__main__":

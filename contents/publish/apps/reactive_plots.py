@@ -16,19 +16,17 @@ app = marimo.App(width="full")
 @app.cell(hide_code=True)
 def __(mo):
     mo.md("""# Welcome to marimo!""")
-    return
 
 
 @app.cell
 def __(bars, mo, scatter):
     chart = mo.ui.altair_chart(scatter & bars)
-    chart
     return (chart,)
 
 
 @app.cell
 def __(chart, mo):
-    (filtered_data := mo.ui.table(chart.value))
+    filtered_data = mo.ui.table(chart.value)
     return (filtered_data,)
 
 
@@ -76,12 +74,14 @@ def __(alt, data):
 def __():
     import altair as alt
     from vega_datasets import data
+
     return alt, data
 
 
 @app.cell
 def __():
     import marimo as mo
+
     return (mo,)
 
 
