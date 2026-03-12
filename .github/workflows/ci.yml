@@ -1,30 +1,94 @@
-name: CI
+# .github/workflows/ci.yaml
+# ==========================================================
+# GitHub Actions CI Workflow for Marimo / UV Projects
+# ----------------------------------------------------------
+# This workflow handles Continuous Integration (CI) for the project:
+# - Installs UV (Python package and project manager)
+# - Sets up Python environment
+# - Installs project dependencies
+# - Runs code linting via Ruff
+# - Executes tests with pytest
+#
+# Notes:
+# - Forces Node.js 24 for actions compatibility (Node.js 20 deprecated)
+# - Easily extendable for additional jobs (build, deploy, integration tests)
+# - Environment variables can be added workflow-wide for maintainability
+# ==========================================================
 
+name: CI  # Workflow name visible in GitHub Actions
+
+# Trigger the workflow on push and pull_request events to main branch
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
 
+# ------------------------------------------------------
+# Workflow-wide environment variables
+# ------------------------------------------------------
+env:
+  # Force all JavaScript-based actions to run Node.js 24
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  # Additional workflow-wide env variables can be added here
+
 jobs:
   test:
+    # Use the latest stable Ubuntu runner
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+    steps:
+      # ------------------------------------------------------
+      # 1. Checkout the repository code
+      # ------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        # Ensures the workflow has access to the latest code
+
+      # ------------------------------------------------------
+      # 2. Install UV (Python package and project manager)
+      # ------------------------------------------------------
+      - name: Install UV
+        uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
+        # Caches UV for faster future runs and repeatable environment setup
 
-      - name: Set up Python
+      # ------------------------------------------------------
+      # 3. Set up Python environment via UV
+      # ------------------------------------------------------
+      - name: Set up Python environment
         run: uv python install
+        # Ensures correct Python version is installed
 
-      - name: Install the project
+      # ------------------------------------------------------
+      # 4. Install project and all dependencies
+      # ------------------------------------------------------
+      - name: Install project dependencies
         run: uv sync --all-extras --dev
+        # --all-extras: installs optional features
+        # --dev: installs development dependencies
 
-      - name: Lint
+      # ------------------------------------------------------
+      # 5. Lint the code using Ruff
+      # ------------------------------------------------------
+      - name: Lint code
         run: uv run ruff check .
+        # Ensures code quality and compliance with linting rules
 
+      # ------------------------------------------------------
+      # 6. Run unit tests
+      # ------------------------------------------------------
       - name: Run tests
         run: uv run pytest tests src
+        # Executes tests in both `tests/` and `src/` directories
+
+      # ------------------------------------------------------
+      # Future maintainers notes:
+      # ------------------------------------------------------
+      # - Add new steps below this section for additional jobs like:
+      #     - build
+      #     - deploy
+      #     - integration tests
+      # - Consider caching pip packages or test artifacts for faster CI
+      # - Workflow-wide env variables make it easier to manage configs
