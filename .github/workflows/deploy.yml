@@ -61,7 +61,7 @@ jobs:
         run: |
           uv --version     # Verify that UV is installed
           which uv         # Verify that UV is in the PATH
-          
+
       # ------------------------------------------------------
       # 3. Set up Python environment via UV
       # ------------------------------------------------------
@@ -82,10 +82,34 @@ jobs:
   # ------------------------------------------------------
   build_site:
     needs: system_setup  # This job depends on the system setup job completing successfully
+    # Use the latest stable Ubuntu runner
     runs-on: ubuntu-latest
+
     steps:
       # ------------------------------------------------------
-      # 1. Run the build script to export notebooks to WebAssembly
+      # 1. Checkout the repository code
+      # ------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        # Ensures the workflow has access to the latest code
+
+      # ------------------------------------------------------
+      # 2. Install UV (Python package and project manager)
+      # ------------------------------------------------------
+      - name: Install UV
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+        # Caches UV for faster future runs and repeatable environment setup
+
+      # Check if `uv` is installed and its version
+      - name: Check UV installation
+        run: |
+          uv --version     # Verify that UV is installed
+          which uv         # Verify that UV is in the PATH
+
+      # ------------------------------------------------------
+      # 3. Run the build script to export notebooks to WebAssembly
       # ------------------------------------------------------
       - name: 🛠️ Export notebooks
         run: |
@@ -100,7 +124,7 @@ jobs:
           tree _site  # Display the exported files
     
       # ------------------------------------------------------
-      # 2. Upload the generated site as an artifact for the deploy job
+      # 4. Upload the generated site as an artifact for the deploy job
       # ------------------------------------------------------
       - name: 📤 Upload artifact
         uses: actions/upload-pages-artifact@v4
