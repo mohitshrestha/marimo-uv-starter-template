@@ -112,7 +112,8 @@ class MarimoHubBuilder:
                     else:
                         logger.error(f"❌ Could not find </head> in {item['filename']}")
                         return False
-            except PermissionError, OSError:  # Fixed Syntax: Added parentheses
+            except (PermissionError, OSError) as e:  # Fixed Syntax: Added parentheses
+                logger.warning(f"⚠️ Error occurred while updating {item['filename']}: {e}")
                 time.sleep(0.3)
         return False
 
