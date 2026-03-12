@@ -33,7 +33,10 @@ env:
   # Additional workflow-wide env variables can be added here
 
 jobs:
-  test:
+  # ------------------------------------------------------
+  # System setup, linting, and testing
+  # ------------------------------------------------------
+  system_setup:
     # Use the latest stable Ubuntu runner
     runs-on: ubuntu-latest
 

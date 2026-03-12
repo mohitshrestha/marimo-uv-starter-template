@@ -52,12 +52,22 @@ uv run ruff format .
 ## Project Structure
 
 ```markdown
-├── .github/            # GitHub Actions workflows
-├── src/               # Source code
-│   └── app.py        # Sample marimo notebook
-├── tests/            # Test files
-├── pyproject.toml    # Project configuration
-└── uv.lock           # Dependency lock file
+├── .github/              # GitHub Actions workflows for deploy
+├── content/              # Notebooks (draft/publish/archive)
+│   ├── draft/
+│   ├── publish/
+│   └── archive/
+├── public/               # Static assets (thumbnails, CSS)
+├── scripts/
+│   └── build_site.py     # Build website & export notebooks
+│   └── demo.sh           # Build the site locally for testing purposes.
+├── site/                 # Generated site (gitignored)
+├── src/                  # Reusable Python modules
+│   └── utils.py          # Sample utils
+├── templates/            # HTML templates
+├── tests/                # Test files
+├── pyproject.toml        # Project configuration
+└── uv.lock               # Dependency lock file
 ```
 
 ## License
