@@ -18,11 +18,14 @@
 name: CI  # Workflow name visible in GitHub Actions
 
 # Trigger the workflow on push and pull_request events to main branch
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
+
+# Add a dummy "none" trigger or just leave it empty to prevent runs
+on: []
 
 # ------------------------------------------------------
 # Workflow-wide environment variables

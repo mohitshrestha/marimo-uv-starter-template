@@ -14,7 +14,7 @@ import shutil
 import subprocess
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 import fire
 import jinja2
@@ -42,7 +42,7 @@ class MarimoSiteBuilder:
         self.output_dir = Path(output_dir)
         self.template_path = Path(template_path)
         self.public_dir = Path(public_dir)
-        self.manifest: List[Dict[str, Any]] = []
+        self.manifest: list[dict[str, Any]] = []
 
     def _copy_public_assets(self):
         """Moves contents of /public to the root of /_site."""
@@ -51,13 +51,13 @@ class MarimoSiteBuilder:
             # Using dirs_exist_ok=True to allow merging with existing output
             shutil.copytree(self.public_dir, self.output_dir, dirs_exist_ok=True)
 
-    def _extract_metadata(self, py_path: Path) -> Dict[str, Any]:
+    def _extract_metadata(self, py_path: Path) -> dict[str, Any]:
         """
         Parses a notebook file to extract SEO and UI metadata.
         Priority: 1. YAML Frontmatter in Docstring, 2. Raw Docstring, 3. Filename.
         """
         try:
-            with open(py_path, "r", encoding="utf-8") as f:
+            with open(py_path, encoding="utf-8") as f:
                 tree = ast.parse(f.read())
 
             docstring = ast.get_docstring(tree) or ""
@@ -82,7 +82,7 @@ class MarimoSiteBuilder:
             logger.error(f"⚠️ Metadata parse error in {py_path.name}: {e}")
             return {"title": py_path.stem, "description": "Notebook", "tags": []}
 
-    def _export_file(self, notebook_path: Path) -> Dict[str, Any]:
+    def _export_file(self, notebook_path: Path) -> dict[str, Any]:
         """
         Worker: Executes Marimo CLI to generate WASM-HTML.
         Returns a dict containing either success data or an error message.
@@ -122,7 +122,7 @@ class MarimoSiteBuilder:
 
         try:
             # Run export and capture stderr for debugging
-            proc = subprocess.run(cmd, check=True, capture_output=True, text=True)
+            subprocess.run(cmd, check=True, capture_output=True, text=True)
             return {
                 "status": "success",
                 "meta": meta,
