@@ -1,9 +1,3 @@
-# /// script
-# requires-python = ">=3.14"
-# dependencies = [
-#     "marimo>=0.20.4",
-# ]
-# ///
 import marimo
 
 __generated_with = "0.20.4"
@@ -14,7 +8,6 @@ with app.setup:
     import marimo as mo
     import numpy as np
     import pandas as pd
-    import pyarrow as pa
 
 
 @app.cell
@@ -44,9 +37,7 @@ def _():
         (
             alt.Chart(data)
             .mark_circle()
-            .encode(
-                x="x", y="y", size=alt.value(100), color=alt.value("steelblue")
-            )
+            .encode(x="x", y="y", size=alt.value(100), color=alt.value("steelblue"))
             .properties(height=400, title="Interactive Scatter Plot")
         )
     )

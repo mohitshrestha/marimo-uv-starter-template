@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marimo Hub</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <div class="max-w-7xl mx-auto px-6 py-12">
+        <header class="mb-12 border-b border-slate-200 pb-10">
+            <h1 class="text-6xl font-black tracking-tighter text-slate-800">
+                MARIMO <span class="text-blue-600">HUB</span>
+            </h1>
+            <p class="text-slate-500 mt-4 text-xl">Interactive WASM Notebook Gallery</p>
+            
+            <div class="mt-10">
+                <input type="text" id="search" placeholder="Type to filter projects..." 
+                    class="px-8 py-5 rounded-3xl border-2 border-slate-100 w-full max-w-2xl shadow-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-lg">
+            </div>
+        </header>
+
+        <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {% for item in items %}
+                {% include 'partials/card.html' %}
+            {% endfor %}
+        </div>
+        
+        <div id="no-results" class="hidden py-32 text-center">
+            <p class="text-slate-300 text-2xl font-semibold">No notebooks match your search.</p>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Search Handler: Performs a case-insensitive search across 
+         * Titles, Tags, and Categories.
+         */
+        const searchInput = document.getElementById('search');
+        const cards = document.querySelectorAll('.project-card');
+        const noResults = document.getElementById('no-results');
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            let count = 0;
+
+            cards.forEach(card => {
+                const content = card.getAttribute('data-search');
+                if (content.includes(term)) {
+                    card.style.display = 'block';
+                    count++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            noResults.classList.toggle('hidden', count > 0);
+        });
+    </script>
+</body>
+</html>

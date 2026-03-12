@@ -1,9 +1,3 @@
-# /// script
-# requires-python = ">=3.14"
-# dependencies = [
-#     "marimo>=0.20.4",
-# ]
-# ///
 import marimo
 
 __generated_with = "0.20.4"
@@ -11,7 +5,6 @@ app = marimo.App()
 
 with app.setup:
     import marimo as mo
-    import pyarrow as pa
 
 
 @app.cell

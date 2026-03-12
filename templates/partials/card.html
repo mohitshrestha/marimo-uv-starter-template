@@ -1,0 +1,35 @@
+<div class="project-card group bg-white rounded-[2rem] border border-slate-200 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
+     data-search="{{ item.title.lower() }} {{ item.category.lower() }} {{ item.tags | join(' ') | lower }}">
+    
+    <div class="aspect-video bg-slate-100 relative overflow-hidden">
+        {% if item.thumbnail_url %}
+            <img src="{{ item.thumbnail_url }}" alt="{{ item.title }}" 
+                 class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-1000">
+        {% else %}
+            <div class="flex items-center justify-center h-full text-slate-200 font-black text-4xl italic">
+                MARIMO
+            </div>
+        {% endif %}
+        
+        <div class="absolute top-5 left-5">
+            <span class="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black shadow-sm uppercase tracking-tighter text-blue-600 border border-blue-50">
+                {{ item.category }}
+            </span>
+        </div>
+    </div>
+
+    <div class="p-8">
+        <h3 class="text-2xl font-bold mb-3 text-slate-800 group-hover:text-blue-600 transition-colors">
+            {{ item.title }}
+        </h3>
+        
+        <p class="text-slate-500 text-sm leading-relaxed line-clamp-2 h-10 mb-8">
+            {{ item.description }}
+        </p>
+
+        <a href="{{ item.url }}" 
+           class="flex items-center justify-center w-full bg-slate-900 text-white py-4 rounded-2xl text-sm font-bold hover:bg-blue-600 transition-all shadow-lg shadow-slate-200 hover:shadow-blue-200">
+            Launch App
+        </a>
+    </div>
+</div>

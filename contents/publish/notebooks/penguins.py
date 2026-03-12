@@ -1,9 +1,3 @@
-# /// script
-# requires-python = ">=3.14"
-# dependencies = [
-#     "marimo>=0.20.4",
-# ]
-# ///
 import marimo
 
 __generated_with = "0.20.4"
@@ -14,7 +8,6 @@ with app.setup:
     import marimo as mo
     import pandas as pd
     import polars as pl
-    import pyarrow as pa
 
     file = mo.notebook_location() / "public" / "penguins.csv"
 
