@@ -3,114 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' https://raw.githubusercontent.com data:;">
-    
-    <title>Notebook Hub | Modern Portfolio</title>
-    
+    <title>Mohit Shrestha | Analytics Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-50 text-slate-900 transition-colors duration-300">
+<body class="bg-slate-50 text-slate-900 selection:bg-blue-100">
 
-    <div class="max-w-7xl mx-auto px-6 py-12">
-        <header class="mb-12 border-b border-slate-200 pb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-            <div class="animate-fade-in">
-                <img src="https://raw.githubusercontent.com/mohitshrestha/brand/refs/heads/main/logo/logo.png" alt="Logo" class="w-32 h-auto mb-6">
-                <h1 class="text-6xl font-black tracking-tighter text-slate-800 uppercase">
-                    Notebook <span class="text-blue-600">Hub</span>
-                </h1>
-                <p class="text-slate-500 mt-2 text-xl font-medium">Interactive Python powered by WASM</p>
-            </div>
-            
-            <div class="w-full max-w-md">
-                <input type="text" id="search" placeholder="Search title, tags, or content..." 
-                    class="px-6 py-4 rounded-2xl border-2 border-slate-100 w-full shadow-xl shadow-slate-200/40 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-lg">
-            </div>
-        </header>
+    <div class="max-w-7xl mx-auto px-6 py-10">
+        {% include 'partials/header.html' %}
 
-        <div class="flex flex-wrap items-center justify-between gap-6 mb-12">
+        <section class="flex flex-col lg:flex-row items-center justify-between gap-6 mb-12 py-8 border-y border-slate-200">
             <div id="filter-buttons" class="flex flex-wrap gap-3">
-                <button data-filter="all" class="filter-btn active px-6 py-2.5 rounded-xl font-bold text-sm transition-all bg-blue-600 text-white shadow-lg shadow-blue-200">All Projects</button>
-                <button data-filter="apps" class="filter-btn px-6 py-2.5 rounded-xl font-bold text-sm bg-white border border-slate-200 text-slate-600 hover:border-blue-400">Apps</button>
-                <button data-filter="notebooks" class="filter-btn px-6 py-2.5 rounded-xl font-bold text-sm bg-white border border-slate-200 text-slate-600 hover:border-blue-400">Notebooks</button>
+                <button data-filter="all" class="filter-btn active">
+                    All <span class="opacity-50 ml-1 text-xs">{{ counts.all }}</span>
+                </button>
+                <button data-filter="apps" class="filter-btn">
+                    Apps <span class="opacity-50 ml-1 text-xs">{{ counts.apps }}</span>
+                </button>
+                <button data-filter="notebooks" class="filter-btn">
+                    Notebooks <span class="opacity-50 ml-1 text-xs">{{ counts.notebooks }}</span>
+                </button>
             </div>
 
-            <div class="flex items-center gap-3 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm">
-                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Sort By</span>
-                <select id="sort-select" class="bg-transparent font-bold text-sm text-slate-700 outline-none cursor-pointer">
+            <div class="flex items-center gap-4 w-full lg:w-auto">
+                <input type="text" id="search-input" placeholder="Search projects..." 
+                    class="w-full lg:w-72 px-5 py-3 rounded-2xl border-2 border-slate-100 focus:border-blue-500 outline-none transition-all shadow-sm">
+                
+                <select id="sort-select" class="px-4 py-3 border-2 border-slate-100 rounded-2xl font-bold text-sm text-slate-600 outline-none cursor-pointer">
                     <option value="featured">Featured First</option>
-                    <option value="name">Name (A-Z)</option>
+                    <option value="az">Name (A-Z)</option>
                 </select>
             </div>
-        </div>
+        </section>
 
-        <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <main id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {% for item in items %}
                 {% include 'partials/card.html' %}
             {% endfor %}
-        </div>
-        
-        <div id="no-results" class="hidden py-32 text-center animate-fade-in">
-            <p class="text-slate-400 text-2xl font-semibold mb-6">No matches found.</p>
-            <button onclick="location.reload()" class="text-blue-600 font-bold hover:underline">Reset Filters</button>
-        </div>
+        </main>
+
+        {% include 'partials/footer.html' %}
     </div>
 
     <script>
-        const searchInput = document.getElementById('search');
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const sortSelect = document.getElementById('sort-select');
-        const grid = document.getElementById('grid');
-        const cards = Array.from(document.querySelectorAll('.project-card'));
-        const noResults = document.getElementById('no-results');
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('search-input');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const sortSelect = document.getElementById('sort-select');
+            const grid = document.getElementById('project-grid');
+            
+            let currentFilter = 'all';
 
-        let currentFilter = 'all';
+            function updateUI() {
+                const term = searchInput.value.toLowerCase();
+                const cards = document.querySelectorAll('.project-card');
 
-        function updateGallery() {
-            const term = searchInput.value.toLowerCase();
-            let count = 0;
-
-            cards.forEach(card => {
-                const searchStr = card.getAttribute('data-search');
-                const category = card.getAttribute('data-category').toLowerCase();
-                
-                const matchesSearch = searchStr.includes(term);
-                const matchesFilter = currentFilter === 'all' || category === currentFilter;
-
-                if (matchesSearch && matchesFilter) {
-                    card.style.display = 'block';
-                    count++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-            noResults.classList.toggle('hidden', count > 0);
-        }
-
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterBtns.forEach(b => {
-                    b.classList.remove('active', 'bg-blue-600', 'text-white', 'shadow-lg');
-                    b.classList.add('bg-white', 'text-slate-600');
+                cards.forEach(card => {
+                    const matchesSearch = card.dataset.search.includes(term);
+                    const matchesFilter = currentFilter === 'all' || card.dataset.category === currentFilter;
+                    card.style.display = (matchesSearch && matchesFilter) ? 'flex' : 'none';
                 });
-                btn.classList.add('active', 'bg-blue-600', 'text-white', 'shadow-lg');
-                currentFilter = btn.getAttribute('data-filter');
-                updateGallery();
-            });
-        });
+            }
 
-        sortSelect.addEventListener('change', () => {
-            const val = sortSelect.value;
-            const sorted = cards.sort((a, b) => {
-                if (val === 'featured') {
-                    return b.getAttribute('data-featured') === 'True' ? 1 : -1;
-                }
-                return a.querySelector('h3').textContent.localeCompare(b.querySelector('h3').textContent);
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    updateUI();
+                });
             });
-            sorted.forEach(c => grid.appendChild(c));
-        });
 
-        searchInput.addEventListener('input', updateGallery);
+            sortSelect.addEventListener('change', () => {
+                const cards = Array.from(document.querySelectorAll('.project-card'));
+                const sorted = cards.sort((a, b) => {
+                    if (sortSelect.value === 'featured') {
+                        const featA = a.dataset.featured === 'True' ? 0 : 1;
+                        const featB = b.dataset.featured === 'True' ? 0 : 1;
+                        return featA - featB;
+                    }
+                    return a.querySelector('h3').textContent.localeCompare(b.querySelector('h3').textContent);
+                });
+                sorted.forEach(c => grid.appendChild(c));
+            });
+
+            searchInput.addEventListener('input', updateUI);
+        });
     </script>
 </body>
 </html>

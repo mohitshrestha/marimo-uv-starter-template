@@ -1,74 +1,53 @@
-/* Marimo Hub - Global Stylesheet
-   Design Principles: Minimalist, Professional, Glassmorphism 
-*/
-
+/* DESIGN SYSTEM: Mohit Shrestha Hub 3.0 */
 :root {
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.3);
+    --brand-blue: #2563eb;
+    --brand-dark: #0f172a;
+    --text-primary: #1e293b;
+    --text-muted: #64748b;
+    --bg-page: #f8fafc;
 }
 
-/* Smooth Scrolling for the entire document */
-html {
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
+body {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* Modern Scrollbar to match the Slate/Blue theme */
-::-webkit-scrollbar {
-    width: 8px;
-}
-::-webkit-scrollbar-track {
-    background: #f1f5f9;
-}
-::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+/* FILTER PILLS - Fixed visibility */
+.filter-btn {
+    padding: 0.6rem 1.4rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+    cursor: pointer;
 }
 
-/* Glassmorphism Effect for Header and Select inputs */
-.glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
+.filter-btn:hover {
+    border-color: var(--brand-blue);
+    color: var(--brand-blue);
 }
 
-/* Entrance Animation: Staggered Fade-In for cards */
-@keyframes cardIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Active state: Strong Blue background with White text */
+.filter-btn.active {
+    background-color: var(--brand-blue) !important;
+    color: #ffffff !important;
+    border-color: var(--brand-blue);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
 }
 
+/* CARDS */
 .project-card {
-    animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    background: white;
+    border: 1px solid #e2e8f0;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Staggered delay for the first 6 cards to create a "wave" effect on load */
-.project-card:nth-child(1) { animation-delay: 0.05s; }
-.project-card:nth-child(2) { animation-delay: 0.10s; }
-.project-card:nth-child(3) { animation-delay: 0.15s; }
-.project-card:nth-child(4) { animation-delay: 0.20s; }
-.project-card:nth-child(5) { animation-delay: 0.25s; }
-.project-card:nth-child(6) { animation-delay: 0.30s; }
-
-/* Prevent text selection on decorative elements */
-.category-badge {
-    user-select: none;
-}
-
-/* Line clamping for descriptions - ensures uniform card heights */
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+.project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border-color: var(--brand-blue);
 }

@@ -1,37 +1,36 @@
-<div class="project-card group bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
-     data-category="{{ item.category }}"
-     data-featured="{{ item.featured }}"
-     data-search="{{ item.title.lower() }} {{ item.category.lower() }} {{ item.tags | join(' ') | lower }}">
+<article class="project-card flex flex-col rounded-[2.5rem] overflow-hidden group shadow-sm"
+         data-category="{{ item.category }}"
+         data-featured="{{ item.meta.featured }}"
+         data-search="{{ item.meta.title.lower() }} {{ item.meta.tags | join(' ') | lower }}">
     
     <div class="aspect-video bg-slate-100 relative overflow-hidden">
-        {% if item.thumbnail_url %}
-            <img src="{{ item.thumbnail_url }}" alt="{{ item.title }}" loading="lazy"
-                 class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-1000">
-        {% else %}
-            <div class="flex items-center justify-center h-full bg-slate-50 text-slate-200 font-black text-2xl italic tracking-tighter">MARIMO</div>
-        {% endif %}
-        
-        <div class="absolute top-6 left-6 flex gap-2">
-            <span class="px-4 py-1.5 rounded-full text-[10px] font-black shadow-sm uppercase tracking-widest border backdrop-blur-md
-                {% if item.category.lower() == 'apps' %} bg-amber-50/90 text-amber-600 border-amber-100 
-                {% else %} bg-blue-50/90 text-blue-600 border-blue-100 {% endif %}">
+        <div class="absolute top-5 left-5 z-10 flex gap-2">
+            <span class="px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-black uppercase tracking-widest text-blue-600 shadow-sm">
                 {{ item.category }}
             </span>
-            {% if item.featured %}
-            <span class="bg-indigo-600 text-white px-3 py-1.5 rounded-full text-[10px] font-bold uppercase shadow-lg">★ Featured</span>
+            {% if item.meta.featured %}
+                <span class="px-3 py-1 rounded-full bg-amber-400 text-amber-900 text-[10px] font-black uppercase tracking-widest shadow-sm">
+                    ★ Featured
+                </span>
             {% endif %}
         </div>
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300 group-hover:scale-105 transition-transform duration-700"></div>
     </div>
 
-    <div class="p-8">
-        <h3 class="text-2xl font-bold mb-3 text-slate-800 group-hover:text-blue-600 transition-colors">{{ item.title }}</h3>
-        <p class="text-slate-500 text-sm line-clamp-2 h-10 mb-8">{{ item.description }}</p>
-
-        <a href="{{ item.url }}" 
-           class="flex items-center justify-center w-full py-4 rounded-2xl text-sm font-bold transition-all
-            {% if item.category.lower() == 'apps' %} bg-amber-500 text-white hover:bg-amber-600 
-            {% else %} bg-blue-600 text-white hover:bg-blue-700 {% endif %}">
-            Launch {{ "App" if item.category.lower() == 'apps' else "Notebook" }}
-        </a>
+    <div class="p-8 flex flex-col flex-grow">
+        <h3 class="text-2xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors">
+            {{ item.meta.title }}
+        </h3>
+        <p class="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-2">
+            {{ item.meta.description }}
+        </p>
+        <div class="mt-auto">
+            <a href="{{ item.url }}" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="flex items-center justify-center w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-blue-600 transition-all shadow-md active:scale-95">
+                Launch Project
+            </a>
+        </div>
     </div>
-</div>
+</article>
