@@ -1,15 +1,12 @@
 # /// script
-# requires-python = ">=3.12"
+# requires-python = ">=3.14"
 # dependencies = [
-#     "marimo==0.13.15",
-#     "altair==4.2.0",
-#     "pandas==2.3.0",
-#     "numpy==2.3.0"
+#     "marimo>=0.20.4",
 # ]
 # ///
 import marimo
 
-__generated_with = "0.10.9"
+__generated_with = "0.20.4"
 app = marimo.App(width="medium")
 
 with app.setup:
@@ -17,6 +14,7 @@ with app.setup:
     import marimo as mo
     import numpy as np
     import pandas as pd
+    import pyarrow as pa
 
 
 @app.cell
@@ -33,6 +31,7 @@ def _():
         Try selecting the points!
         """
     )
+    return
 
 
 @app.cell
@@ -45,17 +44,20 @@ def _():
         (
             alt.Chart(data)
             .mark_circle()
-            .encode(x="x", y="y", size=alt.value(100), color=alt.value("steelblue"))
+            .encode(
+                x="x", y="y", size=alt.value(100), color=alt.value("steelblue")
+            )
             .properties(height=400, title="Interactive Scatter Plot")
         )
     )
-    return chart
+    return (chart,)
 
 
 @app.cell
 def _(chart):
     # Just return the chart value to satisfy ruff
-    return chart.value
+    chart
+    return
 
 
 if __name__ == "__main__":

@@ -1,15 +1,12 @@
 # /// script
-# requires-python = ">=3.12"
+# requires-python = ">=3.14"
 # dependencies = [
-#     "marimo==0.13.15",
-#     "polars==1.30.0",
-#     "altair==4.2.0",
-#     "pandas==2.3.0",
+#     "marimo>=0.20.4",
 # ]
 # ///
 import marimo
 
-__generated_with = "0.13.5"
+__generated_with = "0.20.4"
 app = marimo.App(width="medium")
 
 with app.setup:
@@ -17,33 +14,33 @@ with app.setup:
     import marimo as mo
     import pandas as pd
     import polars as pl
+    import pyarrow as pa
 
     file = mo.notebook_location() / "public" / "penguins.csv"
 
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(
-        """
-        # Palmer Penguins Analysis
+    mo.md("""
+    # Palmer Penguins Analysis
 
-        Analyzing the Palmer Penguins dataset using Polars and marimo.
-        """
-    )
+    Analyzing the Palmer Penguins dataset using Polars and marimo.
+    """)
+    return
 
 
 @app.cell
 def _():
     # Read the penguins dataset
     df = pl.read_csv(str(file))
-    return df  # df.head() removed, returning full df
+    return (df,)
 
 
 @app.cell
 def _():
     # Try to avoid reading the file with pandas
     _df = pd.read_csv(str(file))
-    return _df  # Optional, if you want to return pandas df
+    return
 
 
 @app.cell
@@ -59,11 +56,15 @@ def _(df):
 
     {mo.as_html(df.describe())}
     """)
+    return
 
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(r"""### Species Distribution""")
+    mo.md(r"""
+    ### Species Distribution
+    """)
+    return
 
 
 @app.cell
@@ -76,12 +77,17 @@ def _(df):
         .properties(title="Distribution of Penguin Species"),
         chart_selection=None,
     )
-    return species_chart  # removed standalone expression
+
+    species_chart
+    return
 
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(r"""### Bill Dimensions Analysis""")
+    mo.md(r"""
+    ### Bill Dimensions Analysis
+    """)
+    return
 
 
 @app.cell
@@ -99,7 +105,9 @@ def _(df):
         .properties(title="Bill Length vs Depth by Species"),
         chart_selection=None,
     )
-    return scatter  # removed standalone expression
+
+    scatter
+    return
 
 
 if __name__ == "__main__":

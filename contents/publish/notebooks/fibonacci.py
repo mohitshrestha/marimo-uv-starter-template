@@ -1,34 +1,35 @@
 # /// script
-# requires-python = ">=3.12"
+# requires-python = ">=3.14"
 # dependencies = [
-#     "marimo==0.13.15",
+#     "marimo>=0.20.4",
 # ]
 # ///
 import marimo
 
-__generated_with = "0.10.6"
+__generated_with = "0.20.4"
 app = marimo.App()
 
 with app.setup:
     import marimo as mo
+    import pyarrow as pa
 
 
 @app.cell
 def _():
-    mo.md(
-        r"""
-        # Fibonacci Calculator
+    mo.md(r"""
+    # Fibonacci Calculator
 
-        Use the slider above to calculate the first {n.value} numbers in the Fibonacci sequence.
-        """
-    )
+    Use the slider above to calculate the first {n.value} numbers in the Fibonacci sequence.
+    """)
+    return
 
 
 @app.cell
 def _():
     # Create an interactive slider
     n = mo.ui.slider(1, 100, value=50, label="Number of Fibonacci numbers")
-    return n
+    n
+    return (n,)
 
 
 @app.cell
@@ -36,7 +37,7 @@ def _(n):
     fib = fibonacci(n.value)
     output = ", ".join([str(f) for f in fib])
     mo.md(output)
-    return output
+    return
 
 
 @app.function

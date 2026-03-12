@@ -1,54 +1,41 @@
 # /// script
-# requires-python = ">=3.9"
+# requires-python = ">=3.14"
 # dependencies = [
-#     "altair==5.4.1",
-#     "marimo",
-#     "vega-datasets==0.9.0",
+#     "marimo>=0.20.4",
 # ]
 # ///
-
 import marimo
 
-__generated_with = "0.8.19"
+__generated_with = "0.20.4"
 app = marimo.App(width="full")
 
 
 @app.cell(hide_code=True)
-def __(mo):
-    mo.md("""# Welcome to marimo!""")
+def _(mo):
+    mo.md("""
+    # Welcome to marimo!
+    """)
+    return
 
 
 @app.cell
-def __(bars, mo, scatter):
-    chart = mo.ui.altair_chart(scatter & bars)
-    return (chart,)
+def _():
+    import marimo as mo
+
+    return (mo,)
 
 
 @app.cell
-def __(chart, mo):
-    filtered_data = mo.ui.table(chart.value)
-    return (filtered_data,)
+def _():
+    import altair as alt
+    import pyarrow as pa
+    from vega_datasets import data
+
+    return alt, data
 
 
 @app.cell
-def __(alt, filtered_data, mo):
-    mo.stop(not len(filtered_data.value))
-    mpg_hist = mo.ui.altair_chart(
-        alt.Chart(filtered_data.value)
-        .mark_bar()
-        .encode(alt.X("Miles_per_Gallon:Q", bin=True), y="count()")
-    )
-    horsepower_hist = mo.ui.altair_chart(
-        alt.Chart(filtered_data.value)
-        .mark_bar()
-        .encode(alt.X("Horsepower:Q", bin=True), y="count()")
-    )
-    mo.hstack([mpg_hist, horsepower_hist], justify="space-around", widths="equal")
-    return horsepower_hist, mpg_hist
-
-
-@app.cell
-def __(alt, data):
+def _(alt, data):
     cars = data.cars()
     brush = alt.selection_interval()
     scatter = (
@@ -67,22 +54,37 @@ def __(alt, data):
         .encode(y="Origin:N", color="Origin:N", x="count(Origin):Q")
         .transform_filter(brush)
     )
-    return bars, brush, cars, scatter
+    return bars, scatter
 
 
 @app.cell
-def __():
-    import altair as alt
-    from vega_datasets import data
-
-    return alt, data
+def _(bars, mo, scatter):
+    chart = mo.ui.altair_chart(scatter & bars)
+    chart
+    return (chart,)
 
 
 @app.cell
-def __():
-    import marimo as mo
+def _(chart, mo):
+    (filtered_data := mo.ui.table(chart.value))
+    return (filtered_data,)
 
-    return (mo,)
+
+@app.cell
+def _(alt, filtered_data, mo):
+    mo.stop(not len(filtered_data.value))
+    mpg_hist = mo.ui.altair_chart(
+        alt.Chart(filtered_data.value)
+        .mark_bar()
+        .encode(alt.X("Miles_per_Gallon:Q", bin=True), y="count()")
+    )
+    horsepower_hist = mo.ui.altair_chart(
+        alt.Chart(filtered_data.value)
+        .mark_bar()
+        .encode(alt.X("Horsepower:Q", bin=True), y="count()")
+    )
+    mo.hstack([mpg_hist, horsepower_hist], justify="space-around", widths="equal")
+    return
 
 
 if __name__ == "__main__":
