@@ -118,7 +118,7 @@ jobs:
           # - Nested folder navigation
           # - Automatic thumbnails
           # - Notebook HTML/WASM export
-          uv run scripts/build_site.py run # This script exports all notebooks to the _site directory
+          uv run scripts/build_site.py build # This script exports all notebooks to the _site directory
 
           # Optional: Display the output tree for verification
           tree _site  # Display the exported files
