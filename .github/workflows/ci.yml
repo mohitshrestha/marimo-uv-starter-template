@@ -42,14 +42,14 @@ jobs:
       # 1. Checkout the repository code
       # ------------------------------------------------------
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         # Ensures the workflow has access to the latest code
 
       # ------------------------------------------------------
       # 2. Install UV (Python package and project manager)
       # ------------------------------------------------------
       - name: Install UV
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
         # Caches UV for faster future runs and repeatable environment setup
