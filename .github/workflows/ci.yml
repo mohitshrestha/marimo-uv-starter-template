@@ -1,5 +1,22 @@
-name: CI
+# .github/workflows/ci.yaml
+# ==========================================================
+# GitHub Actions CI Workflow for Marimo / UV Projects
+# ----------------------------------------------------------
+# This workflow handles Continuous Integration (CI) for the project:
+# - Installs UV (Python package and project manager)
+# - Sets up Python environment
+# - Installs project dependencies
+# - Runs code linting via Ruff
+# - Executes tests with pytest
+#
+# Notes:
+# - Forces Node.js 24 for actions compatibility (required as Node.js 20 is deprecated)
+# - Easily extendable for future jobs or steps
+# ==========================================================
 
+name: CI  # Workflow name visible in GitHub Actions
+
+# Trigger the workflow on push and pull_request events to main branch
 on:
   push:
     branches: [main]
@@ -8,23 +25,56 @@ on:
 
 jobs:
   test:
+    # Use the latest stable Ubuntu runner
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Install uv
+    # Force all JavaScript actions to use Node.js 24 (recommended for future-proofing)
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      # ------------------------------------------------------
+      # 1. Checkout the repository code
+      # ------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        # Ensures your workflow has access to the latest code
+
+      # ------------------------------------------------------
+      # 2. Install UV (Python package and project manager)
+      # ------------------------------------------------------
+      - name: Install UV
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
+        # Caches UV to speed up future runs and ensures repeatable environment setup
 
-      - name: Set up Python
+      # ------------------------------------------------------
+      # 3. Set up Python environment
+      # ------------------------------------------------------
+      - name: Set up Python environment via UV
         run: uv python install
+        # This ensures the correct Python version is installed and ready
 
-      - name: Install the project
+      # ------------------------------------------------------
+      # 4. Install the project and its dependencies
+      # ------------------------------------------------------
+      - name: Install project dependencies
         run: uv sync --all-extras --dev
+        # --all-extras: installs all optional features
+        # --dev: installs development dependencies
 
-      - name: Lint
+      # ------------------------------------------------------
+      # 5. Lint the code using Ruff
+      # ------------------------------------------------------
+      - name: Lint code
         run: uv run ruff check .
+        # Ensures code follows linting standards and will fail CI if issues are found
 
+      # ------------------------------------------------------
+      # 6. Run unit tests
+      # ------------------------------------------------------
       - name: Run tests
         run: uv run pytest tests src
+        # Executes tests in both `tests/` and `src/` directories
+        # Ensures all functionality works as expected
