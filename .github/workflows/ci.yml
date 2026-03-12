@@ -10,8 +10,9 @@
 # - Executes tests with pytest
 #
 # Notes:
-# - Forces Node.js 24 for actions compatibility (required as Node.js 20 is deprecated)
-# - Easily extendable for future jobs or steps
+# - Forces Node.js 24 for actions compatibility (Node.js 20 deprecated)
+# - Easily extendable for additional jobs (build, deploy, integration tests)
+# - Environment variables can be added workflow-wide for maintainability
 # ==========================================================
 
 name: CI  # Workflow name visible in GitHub Actions
@@ -23,14 +24,18 @@ on:
   pull_request:
     branches: [main]
 
+# ------------------------------------------------------
+# Workflow-wide environment variables
+# ------------------------------------------------------
+env:
+  # Force all JavaScript-based actions to run Node.js 24
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  # Additional workflow-wide env variables can be added here
+
 jobs:
   test:
     # Use the latest stable Ubuntu runner
     runs-on: ubuntu-latest
-
-    # Force all JavaScript actions to use Node.js 24 (recommended for future-proofing)
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       # ------------------------------------------------------
@@ -38,7 +43,7 @@ jobs:
       # ------------------------------------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
-        # Ensures your workflow has access to the latest code
+        # Ensures the workflow has access to the latest code
 
       # ------------------------------------------------------
       # 2. Install UV (Python package and project manager)
@@ -47,21 +52,21 @@ jobs:
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-        # Caches UV to speed up future runs and ensures repeatable environment setup
+        # Caches UV for faster future runs and repeatable environment setup
 
       # ------------------------------------------------------
-      # 3. Set up Python environment
+      # 3. Set up Python environment via UV
       # ------------------------------------------------------
-      - name: Set up Python environment via UV
+      - name: Set up Python environment
         run: uv python install
-        # This ensures the correct Python version is installed and ready
+        # Ensures correct Python version is installed
 
       # ------------------------------------------------------
-      # 4. Install the project and its dependencies
+      # 4. Install project and all dependencies
       # ------------------------------------------------------
       - name: Install project dependencies
         run: uv sync --all-extras --dev
-        # --all-extras: installs all optional features
+        # --all-extras: installs optional features
         # --dev: installs development dependencies
 
       # ------------------------------------------------------
@@ -69,7 +74,7 @@ jobs:
       # ------------------------------------------------------
       - name: Lint code
         run: uv run ruff check .
-        # Ensures code follows linting standards and will fail CI if issues are found
+        # Ensures code quality and compliance with linting rules
 
       # ------------------------------------------------------
       # 6. Run unit tests
@@ -77,4 +82,13 @@ jobs:
       - name: Run tests
         run: uv run pytest tests src
         # Executes tests in both `tests/` and `src/` directories
-        # Ensures all functionality works as expected
+
+      # ------------------------------------------------------
+      # Future maintainers notes:
+      # ------------------------------------------------------
+      # - Add new steps below this section for additional jobs like:
+      #     - build
+      #     - deploy
+      #     - integration tests
+      # - Consider caching pip packages or test artifacts for faster CI
+      # - Workflow-wide env variables make it easier to manage configs
