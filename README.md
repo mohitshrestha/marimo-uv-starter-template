@@ -53,7 +53,7 @@ uv run ruff format .
 
 ```markdown
 ├── .github/              # GitHub Actions workflows for deploy
-├── content/              # Notebooks (draft/publish/archive)
+├── contents/              # Notebooks (draft/publish/archive)
 │   ├── draft/
 │   ├── publish/
 │   └── archive/

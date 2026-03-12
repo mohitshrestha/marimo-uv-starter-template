@@ -40,8 +40,8 @@ def _export_html_wasm(notebook_path: Path, output_dir: Path, as_app: bool = Fals
     hidden code) or as a regular notebook (in edit mode, interactive).
 
     Args:
-        notebook_path (Path): Path to the Marimo notebook (.py file) to export
-        output_dir (Path): Directory where the exported HTML file will be saved
+        notebook_path (Path): Path to the Marimo notebook (.py file) to export.
+        output_dir (Path): Directory where the exported HTML file will be saved.
         as_app (bool, optional): Whether to export the notebook as an app (in run mode)
                                   or as a notebook (in edit mode). Defaults to False.
 
@@ -218,11 +218,11 @@ def main(
     template_file: Path = Path(template)
     logger.info(f"Using template file: {template_file}")
 
-    # Export notebooks from the "notebooks/" directory
-    notebooks_data = _export(Path("notebooks"), output_dir, as_app=False)
+    # Export notebooks from the "contents/draft/" directory
+    notebooks_data = _export(Path("contents/draft"), output_dir, as_app=False)
 
-    # Export apps from the "apps/" directory
-    apps_data = _export(Path("apps"), output_dir, as_app=True)
+    # Export apps from the "contents/publish/" directory
+    apps_data = _export(Path("contents/publish"), output_dir, as_app=True)
 
     # If no notebooks or apps were found, exit the process
     if not notebooks_data and not apps_data:
