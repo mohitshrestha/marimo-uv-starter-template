@@ -3,91 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohit Shrestha | Analytics Hub</title>
+    <title>Analytics Gallery | Mohit Shrestha</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="public/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body class="bg-slate-50 text-slate-900 selection:bg-blue-100">
+<body class="bg-white text-slate-900 font-['Inter'] antialiased">
 
-    <div class="max-w-7xl mx-auto px-6 py-10">
+    <header class="sticky top-0 z-50 bg-white/95 border-b border-slate-100 py-1 backdrop-blur-sm">
         {% include 'partials/header.html' %}
+    </header>
 
-        <section class="flex flex-col lg:flex-row items-center justify-between gap-6 mb-12 py-8 border-y border-slate-200">
-            <div id="filter-buttons" class="flex flex-wrap gap-3">
-                <button data-filter="all" class="filter-btn active">
-                    All <span class="opacity-50 ml-1 text-xs">{{ counts.all }}</span>
-                </button>
-                <button data-filter="apps" class="filter-btn">
-                    Apps <span class="opacity-50 ml-1 text-xs">{{ counts.apps }}</span>
-                </button>
-                <button data-filter="notebooks" class="filter-btn">
-                    Notebooks <span class="opacity-50 ml-1 text-xs">{{ counts.notebooks }}</span>
-                </button>
+    <main class="max-w-7xl mx-auto px-6 pt-4 pb-6">
+        <div class="flex items-baseline justify-between mb-3">
+            <h2 class="text-2xl font-black tracking-tight">Project Gallery</h2>
+            <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-50 px-2 py-1 rounded border border-slate-100">
+                <span class="text-blue-600">{{ counts.all }}</span> Total
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row items-center gap-2 mb-3">
+            <div class="relative flex-grow w-full lg:w-auto">
+                <input type="text" id="search-input" placeholder="Search title, tags, or technology..." 
+                       class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                <svg class="w-4 h-4 absolute left-3 top-2.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
 
-            <div class="flex items-center gap-4 w-full lg:w-auto">
-                <input type="text" id="search-input" placeholder="Search projects..." 
-                    class="w-full lg:w-72 px-5 py-3 rounded-2xl border-2 border-slate-100 focus:border-blue-500 outline-none transition-all shadow-sm">
-                
-                <select id="sort-select" class="px-4 py-3 border-2 border-slate-100 rounded-2xl font-bold text-sm text-slate-600 outline-none cursor-pointer">
-                    <option value="featured">Featured First</option>
-                    <option value="az">Name (A-Z)</option>
+            <div class="flex items-center gap-2 w-full lg:w-auto">
+                <button id="shuffle-btn" class="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.828 14.828L15 15M9.172 9.172L9 9m5.828-5.828L21 9m0 0l-6.172 6.172M21 9H12M3 3l6.172 6.172M3 21l6.172-6.172"></path></svg>
+                    Shuffle
+                </button>
+
+                <select id="sort-select" class="bg-white border border-slate-200 rounded-lg px-2 py-2 text-xs font-bold text-slate-600 outline-none cursor-pointer">
+                    <option value="featured">Sort: Featured</option>
+                    <option value="name">Sort: A-Z</option>
+                    <option value="newest">Sort: Newest</option>
                 </select>
-            </div>
-        </section>
 
-        <main id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <a href="rss.xml" target="_blank" class="flex items-center gap-2 px-3 py-2 bg-orange-50 border border-orange-100 text-orange-600 rounded-lg text-xs font-bold hover:bg-orange-100 transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6.18,15.64A2.18,2.18,0,0,1,8.36,17.82,2.18,2.18,0,0,1,6.18,20,2.18,2.18,0,0,1,4,17.82,2.18,2.18,0,0,1,6.18,15.64ZM4,4.44V8.34a12.15,12.15,0,0,1,11.66,11.66h3.9A16.05,16.05,0,0,0,4,4.44Zm0,7.6v3.81a4.58,4.58,0,0,1,4.59,4.59h3.81A8.4,8.4,0,0,0,4,12.04Z"/>
+                    </svg>
+                    RSS
+                </a>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 mb-6 pb-2 border-b border-slate-50" id="filter-buttons">
+            <button data-filter="all" class="filter-pill active">All ({{ counts.all }})</button>
+            <button data-filter="apps" class="filter-pill">Apps ({{ counts.apps }})</button>
+            <button data-filter="notebooks" class="filter-pill">Notebooks ({{ counts.notebooks }})</button>
+            <button id="reset-btn" class="hidden text-[10px] font-bold text-red-500 bg-red-50 px-2 py-1 rounded border border-red-100 hover:bg-red-100 transition-all">
+                Reset All
+            </button>
+        </div>
+
+        <div id="project-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {% for item in items %}
                 {% include 'partials/card.html' %}
             {% endfor %}
-        </main>
+        </div>
+    </main>
 
-        {% include 'partials/footer.html' %}
-    </div>
+    {% include 'partials/footer.html' %}
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('search-input');
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            const sortSelect = document.getElementById('sort-select');
-            const grid = document.getElementById('project-grid');
+        /**
+         * GLOBAL SHARE FUNCTIONS
+         * These are defined outside DOMContentLoaded so the 'onclick' in card.html can find them.
+         */
+        
+        // Prevents the main card link from firing and opens LinkedIn
+        function shareToLinkedIn(event, url) {
+            event.preventDefault();
+            event.stopPropagation(); // Stop the click from reaching the card's main link
+            const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+            window.open(shareUrl, '_blank', 'noopener,noreferrer');
+        }
+
+        // Copies the card URL to clipboard with visual feedback
+        function handleCopy(event, url, btn) {
+            event.preventDefault();
+            event.stopPropagation(); // Stop the click from reaching the card's main link
             
-            let currentFilter = 'all';
+            navigator.clipboard.writeText(url).then(() => {
+                const originalHtml = btn.innerHTML;
+                // Update button to show success (Emerald checkmark)
+                btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+                btn.classList.add('bg-emerald-500', 'text-white');
+                btn.classList.remove('text-slate-600');
+                
+                // Revert after 2 seconds
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.classList.remove('bg-emerald-500', 'text-white');
+                    btn.classList.add('text-slate-600');
+                }, 2000);
+            }).catch(err => {
+                console.error('Copy failed', err);
+            });
+        }
 
-            function updateUI() {
-                const term = searchInput.value.toLowerCase();
-                const cards = document.querySelectorAll('.project-card');
+        /**
+         * GALLERY INTERACTIVITY (Filtering, Sorting, Searching)
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('project-grid');
+            const searchInput = document.getElementById('search-input');
+            const sortSelect = document.getElementById('sort-select');
+            const shuffleBtn = document.getElementById('shuffle-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const filterBtns = document.querySelectorAll('.filter-pill');
+            let activeFilter = 'all';
 
-                cards.forEach(card => {
-                    const matchesSearch = card.dataset.search.includes(term);
-                    const matchesFilter = currentFilter === 'all' || card.dataset.category === currentFilter;
-                    card.style.display = (matchesSearch && matchesFilter) ? 'flex' : 'none';
+            // Function to apply current search and filter
+            const refresh = () => {
+                const term = searchInput.value.toLowerCase().trim();
+                
+                // Toggle 'Reset' button visibility
+                if (term !== '' || activeFilter !== 'all') {
+                    resetBtn.classList.remove('hidden');
+                } else {
+                    resetBtn.classList.add('hidden');
+                }
+
+                Array.from(grid.children).forEach(card => {
+                    const matchSearch = card.dataset.search.includes(term);
+                    const matchFilter = activeFilter === 'all' || card.dataset.category === activeFilter;
+                    card.style.display = (matchSearch && matchFilter) ? 'flex' : 'none';
                 });
-            }
+            };
 
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentFilter = btn.dataset.filter;
-                    updateUI();
-                });
+            // Reset All Filter
+            resetBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                activeFilter = 'all';
+                filterBtns.forEach(b => b.classList.remove('active'));
+                document.querySelector('[data-filter="all"]').classList.add('active');
+                refresh();
             });
 
+            // Randomize Grid
+            shuffleBtn.addEventListener('click', () => {
+                const cards = Array.from(grid.children);
+                for (let i = cards.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    grid.appendChild(cards[j]);
+                }
+            });
+
+            // Sort Grid (Name, Newest, or Featured)
             sortSelect.addEventListener('change', () => {
-                const cards = Array.from(document.querySelectorAll('.project-card'));
-                const sorted = cards.sort((a, b) => {
-                    if (sortSelect.value === 'featured') {
-                        const featA = a.dataset.featured === 'True' ? 0 : 1;
-                        const featB = b.dataset.featured === 'True' ? 0 : 1;
-                        return featA - featB;
-                    }
-                    return a.querySelector('h3').textContent.localeCompare(b.querySelector('h3').textContent);
+                const cards = Array.from(grid.children);
+                cards.sort((a, b) => {
+                    if (sortSelect.value === 'name') return a.dataset.title.localeCompare(b.dataset.title);
+                    if (sortSelect.value === 'newest') return new Date(b.dataset.date) - new Date(a.dataset.date);
+                    
+                    // Featured sorting (True comes first)
+                    const aF = a.dataset.featured.toLowerCase() === 'true';
+                    const bF = b.dataset.featured.toLowerCase() === 'true';
+                    return (aF === bF) ? 0 : aF ? -1 : 1;
                 });
-                sorted.forEach(c => grid.appendChild(c));
+                cards.forEach(c => grid.appendChild(c));
             });
 
-            searchInput.addEventListener('input', updateUI);
+            // Category Button Clicks
+            filterBtns.forEach(btn => btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeFilter = btn.dataset.filter;
+                refresh();
+            }));
+
+            // Search Input Typing
+            searchInput.addEventListener('input', refresh);
         });
     </script>
 </body>

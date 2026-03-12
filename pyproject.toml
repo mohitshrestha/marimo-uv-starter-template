@@ -52,3 +52,8 @@ pythonpath = ["./src"]
 autosave = "after_delay"
 autosave_delay = 1000
 format_on_save = true
+
+[tool.marimo_hub]
+base_url = "https://mohitshrestha.github.io/marimo-uv-starter-template/"
+output_dir = "_site"
+content_dir = "contents/publish"
