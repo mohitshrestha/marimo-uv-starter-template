@@ -6,10 +6,10 @@ version = "0.1.0"
 
 [dependency-groups]
 dev = [
+  "marimo>=0.20.4",
   "pre-commit>=4.5.1",
   "pytest>=9.0.2",
-  "ruff>=0.15.0",
-  "marimo>=0.19.7",
+  "ruff>=0.15.5",
 ]
 
 [tool.pytest.ini_options]
